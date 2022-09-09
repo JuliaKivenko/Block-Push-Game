@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float appliedForce = 10f;
     private PlayerInputActions playerInputActions;
     private Rigidbody rb;
+    private PlayerCollision playerCollision;
 
     private Vector3 direction;
 
@@ -16,6 +17,7 @@ public class PlayerController : MonoBehaviour
         playerInputActions = new PlayerInputActions();
 
         rb = GetComponent<Rigidbody>();
+        playerCollision = GetComponent<PlayerCollision>();
     }
     private void OnEnable()
     {
@@ -32,6 +34,9 @@ public class PlayerController : MonoBehaviour
         //get direction to apply force in from player input
         Vector2 input = playerInputActions.Player.Move.ReadValue<Vector2>();
         direction = new Vector3(input.x, 0, input.y);
+
+        //communicate which direction player should be pushing obstacles in if they bump into one
+        playerCollision.SetPushDirection(direction);
     }
 
     private void FixedUpdate()
