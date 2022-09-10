@@ -17,6 +17,12 @@ public class PlayerCollision : MonoBehaviour
             rb.AddForce(pushDirestion * pushStrength);
             other.gameObject.GetComponent<PositiveObstacle>().SetPushDirectionAndForce(pushDirestion, pushStrength);
         }
+
+        if (other.gameObject.tag == "Hazard")
+        {
+            gameObject.SetActive(false);
+            GameManager.Instance.ChangeState(GameState.Lose);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
