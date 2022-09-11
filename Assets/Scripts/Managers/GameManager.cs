@@ -4,6 +4,8 @@ using UnityEngine;
 
 public enum GameState
 {
+    Default,
+    Starting,
     Running,
     Paused,
     Win,
@@ -15,17 +17,20 @@ public class GameManager : Singleton<GameManager>
     public delegate void GameStateChange();
     public static event GameStateChange onGameStateChange;
 
+    public delegate void PointsNumberChange(int currentPoints);
+    public static event PointsNumberChange onPointsNumberChange;
+
 
     public GameState gameState { get; private set; }
-    public float points { get; private set; }
-    public float currentTime { get; private set; }
-    public float lastRunScore { get; private set; }
+    public int points { get; private set; }
+    public float currentRunTime { get; private set; }
+    public float timePlayed { get; private set; }
 
     [SerializeField] private float timePerLevel;
 
     private void Start()
     {
-        SetUpNewRun();
+        ChangeState(GameState.Starting);
     }
 
     //handle changing game state
@@ -39,20 +44,27 @@ public class GameManager : Singleton<GameManager>
 
         switch (newState)
         {
+            case GameState.Starting:
+                SetUpNewRun();
+                break;
+
             case GameState.Running:
+                HandleUnpause();
                 break;
 
             case GameState.Paused:
+                HandlePause();
                 break;
 
             case GameState.Win:
-                lastRunScore = points;
-                SetUpNewRun();
+                HandleGameEnd();
                 break;
 
             case GameState.Lose:
-                lastRunScore = points;
-                SetUpNewRun();
+                HandleGameEnd();
+                break;
+
+            case GameState.Default:
                 break;
         }
 
@@ -61,9 +73,10 @@ public class GameManager : Singleton<GameManager>
 
     private void Update()
     {
+        timePlayed += Time.deltaTime;
         if (gameState == GameState.Running)
         {
-            if (currentTime > 0) currentTime -= Time.deltaTime;
+            if (currentRunTime > 0) currentRunTime -= Time.deltaTime;
             else ChangeState(GameState.Lose);
         }
     }
@@ -72,9 +85,29 @@ public class GameManager : Singleton<GameManager>
     public void SetUpNewRun()
     {
         points = 0;
-        currentTime = timePerLevel;
+        onPointsNumberChange?.Invoke(points);
+        currentRunTime = timePerLevel;
     }
 
-    public void AddPoints() => points += 1;
+    public void AddPoints()
+    {
+        points += 1;
+        onPointsNumberChange?.Invoke(points);
+    }
+
+    private void HandlePause()
+    {
+        Time.timeScale = 0;
+    }
+    private void HandleUnpause()
+    {
+        Time.timeScale = 1;
+    }
+
+    private void HandleGameEnd()
+    {
+        HandlePause();
+        SaveManager.Save();
+    }
 
 }

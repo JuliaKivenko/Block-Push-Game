@@ -7,6 +7,13 @@ public class PlayerCollision : MonoBehaviour
     [SerializeField] private float pushStrength;
     private Vector3 pushDirestion;
 
+    private Rigidbody playerRB;
+
+    private void Start()
+    {
+        playerRB = GetComponent<Rigidbody>();
+    }
+
 
     private void OnCollisionEnter(Collision other)
     {
@@ -14,8 +21,8 @@ public class PlayerCollision : MonoBehaviour
 
         if (other.gameObject.GetComponent<PositiveObstacle>())
         {
-            rb.AddForce(pushDirestion * pushStrength);
-            other.gameObject.GetComponent<PositiveObstacle>().SetPushDirectionAndForce(pushDirestion, pushStrength);
+            rb.AddForce(playerRB.velocity * pushStrength);
+            other.gameObject.GetComponent<PositiveObstacle>().SetPushStrength(pushStrength);
         }
 
         if (other.gameObject.tag == "Hazard")
@@ -31,13 +38,6 @@ public class PlayerCollision : MonoBehaviour
         {
             other.gameObject.SetActive(false);
             GameManager.Instance.AddPoints();
-            Debug.Log(GameManager.Instance.points);
         }
-    }
-
-    public void SetPushDirection(Vector3 direction)
-    {
-        if (direction != Vector3.zero)
-            pushDirestion = direction;
     }
 }

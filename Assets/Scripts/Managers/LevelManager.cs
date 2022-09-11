@@ -49,9 +49,14 @@ public class LevelManager : Singleton<LevelManager>
 
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        GenerateLevel();
+        GameManager.onGameStateChange += ResetLevel;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.onGameStateChange -= ResetLevel;
     }
 
     //Generates a level out of unique chunks
@@ -66,8 +71,6 @@ public class LevelManager : Singleton<LevelManager>
         nextChunkPosition = Vector3.zero;
 
         SpawnChunk(startChunkInstance);
-
-
 
         for (int i = 0; i < chunksPerLevel; i++)
         {
@@ -97,10 +100,26 @@ public class LevelManager : Singleton<LevelManager>
         levelChunk.StartMoving();
     }
 
-    /*private void Update()
+    public void ResetLevel()
     {
-        levelScrollSpeed = Mathf.Lerp(levelScrollSpeed, minMaxScrollSpeed.y, Time.deltaTime);
-    }*/
+        if (GameManager.Instance.gameState != GameState.Starting)
+            return;
+
+        startChunkInstance.StopMoving();
+        startChunkInstance.gameObject.SetActive(false);
+        finishChunkInstance.StopMoving();
+        finishChunkInstance.gameObject.SetActive(false);
+
+        foreach (var chunk in levelChunkInstances)
+        {
+            chunk.StopMoving();
+            chunk.gameObject.SetActive(false);
+        }
+
+        GenerateLevel();
+
+        GameManager.Instance.ChangeState(GameState.Running);
+    }
 
     public float GetLevelScrollSpeed() => levelScrollSpeed;
 }

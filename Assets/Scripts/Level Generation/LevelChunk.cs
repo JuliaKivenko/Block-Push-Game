@@ -7,6 +7,7 @@ public class LevelChunk : MonoBehaviour
 {
     [SerializeField] private Transform chunkEnd;
 
+    private Sequence sequence;
     private float scrollSpeed;
     private float despawnPositionZ;
 
@@ -19,6 +20,14 @@ public class LevelChunk : MonoBehaviour
 
     public void StartMoving()
     {
-        transform.DOMoveZ(despawnPositionZ, scrollSpeed).SetEase(Ease.Linear).OnComplete(() => { gameObject.SetActive(false); });
+        if (sequence != null)
+            return;
+        sequence = DOTween.Sequence();
+        sequence.Append(transform.DOMoveZ(despawnPositionZ, scrollSpeed).SetEase(Ease.Linear).OnComplete(() => { gameObject.SetActive(false); }));
+    }
+    public void StopMoving()
+    {
+        sequence.Kill();
+        sequence = null;
     }
 }
