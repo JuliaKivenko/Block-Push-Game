@@ -2888,13 +2888,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelScrollSpeed: 50
-  minMaxScrollSpeed: {x: 50, y: 10}
   chunkDespawnTransform: {fileID: 1934305136}
-  chunksPerLevel: 1
+  chunksPerLevel: 3
   startChunk: {fileID: 3283178985032918428, guid: 725b56078ab07eb498c4b48e47b651f9, type: 3}
   finishChunk: {fileID: 3283178985032918428, guid: a123d3216f2e6e04880d2645a1be1432, type: 3}
   levelChunks:
   - {fileID: 3283178985032918428, guid: 9b224ac1103abe84ba3092198e80c00a, type: 3}
+  - {fileID: 3283178985032918428, guid: 62f04edd880f646468c29ca790338806, type: 3}
+  - {fileID: 3283178985032918428, guid: 46f04ee7d724ca94894be1dd4b7db1ec, type: 3}
+  - {fileID: 3283178985032918428, guid: 727bd849ec4cd24459ccf3af02fd52c6, type: 3}
+  - {fileID: 3283178985032918428, guid: 545f234a18951e942ac5a04ed6bac868, type: 3}
+  - {fileID: 3283178985032918428, guid: 7e1c50f2789abba4fa554836ac78c494, type: 3}
+  - {fileID: 3283178985032918428, guid: 3e929ffe89c544f46b17e17a5e41f85c, type: 3}
+  - {fileID: 3283178985032918428, guid: 62b8d92065087a84ab5f960d92f83dc3, type: 3}
 --- !u!4 &1377490383
 Transform:
   m_ObjectHideFlags: 0

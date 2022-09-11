@@ -67,9 +67,15 @@ public class LevelManager : Singleton<LevelManager>
 
         SpawnChunk(startChunkInstance);
 
+
+
         for (int i = 0; i < chunksPerLevel; i++)
         {
             LevelChunk newChunk = levelChunkInstances[Random.Range(0, levelChunkInstances.Count)];
+            while (newChunk.gameObject.activeInHierarchy)
+            {
+                newChunk = levelChunkInstances[Random.Range(0, levelChunkInstances.Count)];
+            }
             SpawnChunk(newChunk);
         }
 
